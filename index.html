@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SkillCheck</title>
+    <style>
+        /* Added SkillCheck logo styles */
+        .logo {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+            position: relative;
+            padding-bottom: 40px; /* Додаємо місце для футера */
+        }
+        
+        #main-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        #sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 150px;
+        }
+        
+        .test-btn {
+            padding: 12px 15px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .test-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(41, 128, 185, 0.3);
+        }
+        
+        .test-btn.active {
+            background-color: #2c3e50;
+        }
+        
+        #game-container {
+            max-width: 800px;
+            margin: 0;
+            padding: 25px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background-color: #f8f9fa;
+            padding: 12px 20px;
+            border-radius: 8px;
+            min-width: 120px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        #game-area {
+            width: 100%;
+            height: 500px;
+            margin: 20px auto;
+            position: relative;
+            background-color: #eaf7fd;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .target {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s;
+            transform-origin: center;
+        }
+        
+        .target:hover {
+            transform: scale(1.05);
+        }
+        
+        .target:active {
+            transform: scale(0.95);
+        }
+        
+        #start-btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 0;
+        }
+        
+        #start-btn:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+        }
+        
+        #start-btn:disabled {
+            background-color: #95a5a6;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        
+        #leaderboard {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        #leaderboard h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .leaderboard-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .leaderboard-tab {
+            padding: 8px 15px;
+            margin: 0 5px;
+            background-color: #bdc3c7;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .leaderboard-tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        #leaderboard-lists {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            display: none;
+        }
+        
+        .leaderboard-list.active {
+            display: block;
+        }
+        
+        .leaderboard-list li {
+            padding: 12px 20px;
+            margin: 8px 0;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        
+        .difficulty-selector {
+            margin: 15px 0;
+        }
+        
+        .difficulty-btn {
+            padding: 8px 15px;
+            margin: 0 5px;
+            background-color: #bdc3c7;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .difficulty-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .difficulty-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        @keyframes shrink {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.1); opacity: 0; }
+        }
+        
+        /* Click test styles */
+        #click-test-container {
+            display: none;
+        }
+        
+        #click-area {
+            width: 100%;
+            height: 500px;
+            margin: 20px auto;
+            position: relative;
+            background-color: #eaf7fd;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        #click-area.click-effect {
+            background-color: #d4edff;
+            transition: background-color 0.1s;
+        }
+        
+        #click-area.red-bg {
+            background-color: #ffcccc;
+        }
+        
+        #click-area.green-bg {
+            background-color: #ccffcc;
+        }
+        
+        #click-area-text {
+            font-size: 18px;
+            color: #555;
+            pointer-events: none;
+        }
+        
+        #click-counter {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        #click-timer {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        #click-start-btn {
+            padding: 12px 30px;
+            font-size: 18px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 0;
+        }
+        
+        #click-start-btn:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+        }
+        
+        .time-selector {
+            margin: 15px 0;
+        }
+        
+        .time-btn {
+            padding: 8px 15px;
+            margin: 0 5px;
+            background-color: #bdc3c7;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .time-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .time-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Reaction test styles */
+        #reaction-test-container {
+            display: none;
+        }
+        
+        #reaction-area {
+            width: 100%;
+            height: 500px;
+            margin: 20px auto;
+            position: relative;
+            background-color: #eaf7fd;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        #reaction-area.red-bg {
+            background-color: #ffcccc;
+        }
+        
+        #reaction-area.green-bg {
+            background-color: #ccffcc;
+        }
+        
+        #reaction-area-text {
+            font-size: 18px;
+            color: #555;
+            pointer-events: none;
+        }
+        
+        #reaction-time {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        #reaction-best {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        #reaction-average {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Footer styles */
+        .copyright-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(118, 118, 118, 0.7); /* Сірий з прозорістю */
+            color: rgba(255, 255, 255, 0.8); /* Білий текст з прозорістю */
+            padding: 8px 0;
+            text-align: center;
+            font-size: 12px;
+            z-index: 100;
+            backdrop-filter: blur(2px); /* Легке розмиття фону */
+        }
+    </style>
+</head>
+<body>
+    <!-- SkillCheck Logo -->
+    <div class="logo">SkillCheck</div>
+
+    <div id="main-container">
+        <div id="sidebar">
+            <button class="test-btn active" id="aim-test-btn">Aim Test</button>
+            <button class="test-btn" id="click-test-btn">Click Test</button>
+            <button class="test-btn" id="reaction-test-btn">Reaction Test</button>
+        </div>
+        
+        <div id="game-container">
+            <div id="aim-test-container">
+                <h1>Disappearing Target Game</h1>
+                
+                <div class="difficulty-selector">
+                    <p>Select difficulty:</p>
+                    <button class="difficulty-btn active" data-difficulty="easy" id="easy-btn">Easy</button>
+                    <button class="difficulty-btn" data-difficulty="normal" id="normal-btn">Normal</button>
+                    <button class="difficulty-btn" data-difficulty="hard" id="hard-btn">Hard</button>
+                </div>
+                
+                <div class="game-stats">
+                    <div class="stat-box" id="score">🎯 Hits: 0</div>
+                    <div class="stat-box" id="misses">❌ Misses: 0</div>
+                    <div class="stat-box" id="timer">⏱️ Time: 30</div>
+                    <div class="stat-box" id="accuracy">📊 Accuracy: 0%</div>
+                </div>
+                
+                <button id="start-btn">Start Game</button>
+                <div id="game-area"></div>
+                
+                <div id="leaderboard">
+                    <h2>Leaderboard (Top 10)</h2>
+                    
+                    <div class="leaderboard-tabs">
+                        <button class="leaderboard-tab active" data-difficulty="easy">Easy</button>
+                        <button class="leaderboard-tab" data-difficulty="normal">Normal</button>
+                        <button class="leaderboard-tab" data-difficulty="hard">Hard</button>
+                    </div>
+                    
+                    <div id="leaderboard-lists">
+                        <ol id="easy-leaderboard" class="leaderboard-list active"></ol>
+                        <ol id="normal-leaderboard" class="leaderboard-list"></ol>
+                        <ol id="hard-leaderboard" class="leaderboard-list"></ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="click-test-container">
+                <h1>Click Test</h1>
+                
+                <div class="time-selector">
+                    <p>Select time:</p>
+                    <button class="time-btn active" data-time="5">5s</button>
+                    <button class="time-btn" data-time="10">10s</button>
+                    <button class="time-btn" data-time="20">20s</button>
+                    <button class="time-btn" data-time="30">30s</button>
+                    <button class="time-btn" data-time="60">60s</button>
+                </div>
+                
+                <div class="game-stats">
+                    <div class="stat-box" id="click-counter">🖱️ Clicks: 0</div>
+                    <div class="stat-box" id="click-timer">⏱️ Time: 5</div>
+                    <div class="stat-box" id="click-cps">📊 CPS: 0</div>
+                </div>
+                
+                <button id="click-start-btn">Start Test</button>
+                <div id="click-area">
+                    <div id="click-area-text">Click anywhere in this area as fast as you can when the test starts</div>
+                </div>
+                
+                <div id="click-leaderboard">
+                    <h2>Leaderboard (Top 10)</h2>
+                    <div class="leaderboard-tabs">
+                        <button class="leaderboard-tab active" data-time="5">5s</button>
+                        <button class="leaderboard-tab" data-time="10">10s</button>
+                        <button class="leaderboard-tab" data-time="20">20s</button>
+                        <button class="leaderboard-tab" data-time="30">30s</button>
+                        <button class="leaderboard-tab" data-time="60">60s</button>
+                    </div>
+                    <div id="click-leaderboard-lists">
+                        <ol id="click-leaderboard-5" class="leaderboard-list active"></ol>
+                        <ol id="click-leaderboard-10" class="leaderboard-list"></ol>
+                        <ol id="click-leaderboard-20" class="leaderboard-list"></ol>
+                        <ol id="click-leaderboard-30" class="leaderboard-list"></ol>
+                        <ol id="click-leaderboard-60" class="leaderboard-list"></ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="reaction-test-container">
+                <h1>Reaction Test</h1>
+                
+                <div class="game-stats">
+                    <div class="stat-box" id="reaction-time">⏱️ Reaction: 0ms</div>
+                    <div class="stat-box" id="reaction-best">🏆 Best: 0ms</div>
+                    <div class="stat-box" id="reaction-average">📊 Average: 0ms</div>
+                </div>
+                
+                <button id="reaction-start-btn">Start Test</button>
+                <div id="reaction-area">
+                    <div id="reaction-area-text">Click START and wait for the screen to turn green</div>
+                </div>
+                <div id="reaction-result"></div>
+                
+                <div id="reaction-leaderboard">
+                    <h2>Leaderboard (Top 10)</h2>
+                    <ol id="reaction-leaderboard-list" class="leaderboard-list"></ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copyright Footer -->
+    <div class="copyright-footer">
+        &copy; 2025 SkillCheck. All Rights Reserved. Unauthorized copying or distribution is prohibited.
+    </div>
+
+    <script>
+        // Game elements
+        const gameArea = document.getElementById('game-area');
+        const scoreDisplay = document.getElementById('score');
+        const missesDisplay = document.getElementById('misses');
+        const timerDisplay = document.getElementById('timer');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const startBtn = document.getElementById('start-btn');
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        const easyBtn = document.getElementById('easy-btn');
+        const normalBtn = document.getElementById('normal-btn');
+        const hardBtn = document.getElementById('hard-btn');
+        const leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
+        
+        // Click test elements
+        const aimTestBtn = document.getElementById('aim-test-btn');
+        const clickTestBtn = document.getElementById('click-test-btn');
+        const reactionTestBtn = document.getElementById('reaction-test-btn');
+        const aimTestContainer = document.getElementById('aim-test-container');
+        const clickTestContainer = document.getElementById('click-test-container');
+        const reactionTestContainer = document.getElementById('reaction-test-container');
+        const clickArea = document.getElementById('click-area');
+        const clickAreaText = document.getElementById('click-area-text');
+        const clickCounter = document.getElementById('click-counter');
+        const clickTimer = document.getElementById('click-timer');
+        const clickCps = document.getElementById('click-cps');
+        const clickStartBtn = document.getElementById('click-start-btn');
+        const timeBtns = document.querySelectorAll('.time-btn');
+        const clickLeaderboardTabs = document.querySelectorAll('#click-leaderboard .leaderboard-tab');
+        
+        // Reaction test elements
+        const reactionArea = document.getElementById('reaction-area');
+        const reactionAreaText = document.getElementById('reaction-area-text');
+        const reactionTimeDisplay = document.getElementById('reaction-time');
+        const reactionBestDisplay = document.getElementById('reaction-best');
+        const reactionAverageDisplay = document.getElementById('reaction-average');
+        const reactionStartBtn = document.getElementById('reaction-start-btn');
+        const reactionResult = document.getElementById('reaction-result');
+        const reactionLeaderboardList = document.getElementById('reaction-leaderboard-list');
+        
+        // Game variables
+        let score = 0;
+        let misses = 0;
+        let timeLeft = 30;
+        let gameInterval;
+        let timerInterval;
+        let isGameRunning = false;
+        let activeTargets = [];
+        let currentDifficulty = 'easy';
+        
+        // Click test variables
+        let clickCount = 0;
+        let clickTestTimeLeft = 5;
+        let clickTestInterval;
+        let isClickTestRunning = false;
+        let clickStartTime;
+        let currentTimeSetting = 5;
+        
+        // Reaction test variables
+        let reactionStartTime;
+        let reactionEndTime;
+        let reactionTimeout;
+        let isReactionTestRunning = false;
+        let isWaitingForGreen = false;
+        let reactionTimes = [];
+        let bestReactionTime = 0;
+        let averageReactionTime = 0;
+        let currentAttempt = 0;
+        const maxAttempts = 5;
+        
+        // Difficulty settings
+        const difficultySettings = {
+            easy: {
+                targetSize: 100,
+                disappearTime: 3000,
+                spawnInterval: 1000
+            },
+            normal: {
+                targetSize: 80,
+                disappearTime: 2000,
+                spawnInterval: 800
+            },
+            hard: {
+                targetSize: 60,
+                disappearTime: 1000,
+                spawnInterval: 600
+            }
+        };
+        
+        // Leaderboards
+        let leaderboards = {
+            easy: JSON.parse(localStorage.getItem('leaderboard-easy')) || [],
+            normal: JSON.parse(localStorage.getItem('leaderboard-normal')) || [],
+            hard: JSON.parse(localStorage.getItem('leaderboard-hard')) || [],
+            click5: JSON.parse(localStorage.getItem('leaderboard-click-5')) || [],
+            click10: JSON.parse(localStorage.getItem('leaderboard-click-10')) || [],
+            click20: JSON.parse(localStorage.getItem('leaderboard-click-20')) || [],
+            click30: JSON.parse(localStorage.getItem('leaderboard-click-30')) || [],
+            click60: JSON.parse(localStorage.getItem('leaderboard-click-60')) || [],
+            reaction: JSON.parse(localStorage.getItem('leaderboard-reaction')) || []
+        };
+        
+        // Initialize leaderboards
+        updateLeaderboards();
+        updateClickLeaderboards();
+        updateReactionLeaderboard();
+
+        // Test type selection
+        aimTestBtn.addEventListener('click', () => {
+            aimTestBtn.classList.add('active');
+            clickTestBtn.classList.remove('active');
+            reactionTestBtn.classList.remove('active');
+            aimTestContainer.style.display = 'block';
+            clickTestContainer.style.display = 'none';
+            reactionTestContainer.style.display = 'none';
+        });
+        
+        clickTestBtn.addEventListener('click', () => {
+            clickTestBtn.classList.add('active');
+            aimTestBtn.classList.remove('active');
+            reactionTestBtn.classList.remove('active');
+            aimTestContainer.style.display = 'none';
+            clickTestContainer.style.display = 'block';
+            reactionTestContainer.style.display = 'none';
+        });
+        
+        reactionTestBtn.addEventListener('click', () => {
+            reactionTestBtn.classList.add('active');
+            aimTestBtn.classList.remove('active');
+            clickTestBtn.classList.remove('active');
+            aimTestContainer.style.display = 'none';
+            clickTestContainer.style.display = 'none';
+            reactionTestContainer.style.display = 'block';
+        });
+
+        // Difficulty selection
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (isGameRunning) return;
+                
+                difficultyBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentDifficulty = btn.dataset.difficulty;
+            });
+        });
+
+        // Time selection for click test
+        timeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (isClickTestRunning) return;
+                
+                timeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTimeSetting = parseInt(btn.dataset.time);
+                clickTestTimeLeft = currentTimeSetting;
+                clickTimer.textContent = `⏱️ Time: ${clickTestTimeLeft}`;
+            });
+        });
+
+        // Leaderboard tabs
+        leaderboardTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                leaderboardTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                document.querySelectorAll('.leaderboard-list').forEach(list => {
+                    list.classList.remove('active');
+                });
+                
+                document.getElementById(`${tab.dataset.difficulty}-leaderboard`).classList.add('active');
+            });
+        });
+
+        // Click leaderboard tabs
+        clickLeaderboardTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                clickLeaderboardTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                document.querySelectorAll('#click-leaderboard-lists .leaderboard-list').forEach(list => {
+                    list.classList.remove('active');
+                });
+                
+                document.getElementById(`click-leaderboard-${tab.dataset.time}`).classList.add('active');
+            });
+        });
+
+        // Update all leaderboards
+        function updateLeaderboards() {
+            updateLeaderboard('easy');
+            updateLeaderboard('normal');
+            updateLeaderboard('hard');
+        }
+        
+        // Update click leaderboards
+        function updateClickLeaderboards() {
+            updateClickLeaderboard('5');
+            updateClickLeaderboard('10');
+            updateClickLeaderboard('20');
+            updateClickLeaderboard('30');
+            updateClickLeaderboard('60');
+        }
+        
+        // Update reaction leaderboard
+        function updateReactionLeaderboard() {
+            reactionLeaderboardList.innerHTML = '';
+            
+            // Sort by reaction time (ascending - faster is better)
+            leaderboards.reaction.sort((a, b) => a.time - b.time);
+            
+            // Display top 10
+            leaderboards.reaction.slice(0, 10).forEach((player, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${index + 1}. ${player.name}</span>
+                    <span>${player.time}ms</span>
+                `;
+                reactionLeaderboardList.appendChild(li);
+            });
+        }
+        
+        // Update specific click leaderboard
+        function updateClickLeaderboard(time) {
+            const leaderboardList = document.getElementById(`click-leaderboard-${time}`);
+            leaderboardList.innerHTML = '';
+            
+            // Sort by CPS (descending)
+            leaderboards[`click${time}`].sort((a, b) => b.cps - a.cps);
+            
+            // Display top 10
+            leaderboards[`click${time}`].slice(0, 10).forEach((player, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${index + 1}. ${player.name}</span>
+                    <div>
+                        <span style="margin-right: 20px;">CPS: ${player.cps}</span>
+                        <span>Clicks: ${player.clicks}</span>
+                    </div>
+                `;
+                leaderboardList.appendChild(li);
+            });
+        }
+
+        // Update specific leaderboard
+        function updateLeaderboard(difficulty) {
+            const leaderboardList = document.getElementById(`${difficulty}-leaderboard`);
+            leaderboardList.innerHTML = '';
+            
+            // Sort by score (descending)
+            leaderboards[difficulty].sort((a, b) => b.score - a.score);
+            
+            // Display top 10
+            leaderboards[difficulty].slice(0, 10).forEach((player, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${index + 1}. ${player.name}</span>
+                    <div>
+                        <span style="margin-right: 20px;">Score: ${player.score}</span>
+                        <span>Accuracy: ${player.accuracy}%</span>
+                    </div>
+                `;
+                leaderboardList.appendChild(li);
+            });
+        }
+
+        // Create a new target
+        function createTarget() {
+            if (!isGameRunning || activeTargets.length >= 3) return;
+            
+            const target = document.createElement('div');
+            target.className = 'target';
+            target.style.width = difficultySettings[currentDifficulty].targetSize + 'px';
+            target.style.height = difficultySettings[currentDifficulty].targetSize + 'px';
+            target.style.backgroundColor = getRandomColor();
+            
+            // Position the target randomly
+            const maxX = gameArea.clientWidth - difficultySettings[currentDifficulty].targetSize;
+            const maxY = gameArea.clientHeight - difficultySettings[currentDifficulty].targetSize;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            target.style.left = randomX + 'px';
+            target.style.top = randomY + 'px';
+            
+            // Add shrink animation
+            target.style.animation = `shrink ${difficultySettings[currentDifficulty].disappearTime}ms linear forwards`;
+            
+            // Add click handler
+            target.addEventListener('click', function(e) {
+                e.stopPropagation();
+                hitTarget(target);
+            });
+            
+            // Add to DOM and active targets array
+            gameArea.appendChild(target);
+            activeTargets.push(target);
+            
+            // Remove target after it disappears
+            setTimeout(() => {
+                if (target.parentNode) {
+                    missTarget(target);
+                }
+            }, difficultySettings[currentDifficulty].disappearTime);
+        }
+
+        // Generate random color
+        function getRandomColor() {
+            const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Handle hitting a target
+        function hitTarget(target) {
+            if (!isGameRunning) return;
+            
+            score++;
+            scoreDisplay.textContent = `🎯 Hits: ${score}`;
+            accuracyDisplay.textContent = `📊 Accuracy: ${calculateAccuracy()}%`;
+            
+            // Remove target
+            target.remove();
+            activeTargets = activeTargets.filter(t => t !== target);
+            
+            // Immediately create new target to maintain 3 targets
+            setTimeout(createTarget, 100);
+        }
+
+        // Handle missing a target
+        function missTarget(target) {
+            if (!isGameRunning) return;
+            
+            if (target.parentNode) {
+                target.remove();
+                activeTargets = activeTargets.filter(t => t !== target);
+                misses++;
+                missesDisplay.textContent = `❌ Misses: ${misses}`;
+                accuracyDisplay.textContent = `📊 Accuracy: ${calculateAccuracy()}%`;
+                
+                // Immediately create new target to maintain 3 targets
+                setTimeout(createTarget, 100);
+            }
+        }
+
+        // Calculate accuracy
+        function calculateAccuracy() {
+            const totalAttempts = score + misses;
+            return totalAttempts > 0 ? Math.round((score / totalAttempts) * 100) : 0;
+        }
+
+        // Start game function
+        function startGame() {
+            if (isGameRunning) return;
+            
+            isGameRunning = true;
+            score = 0;
+            misses = 0;
+            timeLeft = 30;
+            activeTargets = [];
+            scoreDisplay.textContent = `🎯 Hits: ${score}`;
+            missesDisplay.textContent = `❌ Misses: ${misses}`;
+            timerDisplay.textContent = `⏱️ Time: ${timeLeft}`;
+            accuracyDisplay.textContent = `📊 Accuracy: 0%`;
+            
+            // Disable difficulty buttons during game
+            difficultyBtns.forEach(btn => {
+                btn.disabled = true;
+            });
+            
+            // Create initial targets
+            for (let i = 0; i < 3; i++) {
+                setTimeout(createTarget, i * 300);
+            }
+            
+            // Create new targets as needed
+            gameInterval = setInterval(() => {
+                if (activeTargets.length < 3) {
+                    createTarget();
+                }
+            }, difficultySettings[currentDifficulty].spawnInterval);
+            
+            timerInterval = setInterval(updateTimer, 1000);
+            
+            startBtn.disabled = true;
+        }
+
+        // Update timer
+        function updateTimer() {
+            timeLeft--;
+            timerDisplay.textContent = `⏱️ Time: ${timeLeft}`;
+            
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+
+        // End game function
+        function endGame() {
+            clearInterval(gameInterval);
+            clearInterval(timerInterval);
+            isGameRunning = false;
+            
+            // Remove all targets
+            activeTargets.forEach(target => {
+                if (target.parentNode) {
+                    target.remove();
+                }
+            });
+            activeTargets = [];
+            
+            // Re-enable difficulty buttons
+            difficultyBtns.forEach(btn => {
+                btn.disabled = false;
+            });
+            
+            startBtn.disabled = false;
+            
+            // Save score
+            saveScore();
+        }
+
+        // Save score to leaderboard
+        function saveScore() {
+            const name = prompt('Game Over!\nEnter your name:', 'Player');
+            if (name === null || name.trim() === '') return;
+            
+            const accuracy = calculateAccuracy();
+            const newScore = {
+                name: name.trim(),
+                score,
+                accuracy,
+                date: new Date().toLocaleDateString()
+            };
+            
+            // Add to current difficulty leaderboard
+            leaderboards[currentDifficulty].push(newScore);
+            
+            // Sort and keep top 10
+            leaderboards[currentDifficulty].sort((a, b) => b.score - a.score);
+            leaderboards[currentDifficulty] = leaderboards[currentDifficulty].slice(0, 10);
+            
+            // Save to localStorage
+            localStorage.setItem(`leaderboard-${currentDifficulty}`, JSON.stringify(leaderboards[currentDifficulty]));
+            
+            // Update leaderboard display
+            updateLeaderboard(currentDifficulty);
+        }
+
+        // Miss click handler (clicking outside targets)
+        gameArea.addEventListener('click', function() {
+            if (!isGameRunning) return;
+            
+            misses++;
+            missesDisplay.textContent = `❌ Misses: ${misses}`;
+            accuracyDisplay.textContent = `📊 Accuracy: ${calculateAccuracy()}%`;
+        });
+
+        // Start game button
+        startBtn.addEventListener('click', startGame);
+        
+        // Click test functions
+        function startClickTest() {
+            if (isClickTestRunning) return;
+            
+            isClickTestRunning = true;
+            clickCount = 0;
+            clickTestTimeLeft = currentTimeSetting;
+            clickCounter.textContent = `🖱️ Clicks: ${clickCount}`;
+            clickTimer.textContent = `⏱️ Time: ${clickTestTimeLeft}`;
+            clickCps.textContent = `📊 CPS: 0`;
+            
+            clickStartBtn.disabled = true;
+            clickAreaText.style.display = 'none';
+            clickStartTime = Date.now();
+            
+            // Update timer every second
+            clickTestInterval = setInterval(() => {
+                clickTestTimeLeft--;
+                clickTimer.textContent = `⏱️ Time: ${clickTestTimeLeft}`;
+                
+                if (clickTestTimeLeft <= 0) {
+                    endClickTest();
+                }
+            }, 1000);
+        }
+        
+        function endClickTest() {
+            clearInterval(clickTestInterval);
+            isClickTestRunning = false;
+            
+            const elapsedTime = (Date.now() - clickStartTime) / 1000;
+            const cps = (clickCount / elapsedTime).toFixed(2);
+            clickCps.textContent = `📊 CPS: ${cps}`;
+            
+            clickStartBtn.disabled = false;
+            clickAreaText.style.display = 'block';
+            
+            // Save score
+            saveClickScore(clickCount, cps);
+        }
+        
+        function saveClickScore(clicks, cps) {
+            const name = prompt('Test Complete!\nEnter your name:', 'Player');
+            if (name === null || name.trim() === '') return;
+            
+            const newScore = {
+                name: name.trim(),
+                clicks,
+                cps: parseFloat(cps),
+                date: new Date().toLocaleDateString()
+            };
+            
+            // Add to click leaderboard
+            const leaderboardKey = `click${currentTimeSetting}`;
+            leaderboards[leaderboardKey].push(newScore);
+            
+            // Sort and keep top 10
+            leaderboards[leaderboardKey].sort((a, b) => b.cps - a.cps);
+            leaderboards[leaderboardKey] = leaderboards[leaderboardKey].slice(0, 10);
+            
+            // Save to localStorage
+            localStorage.setItem(`leaderboard-${leaderboardKey}`, JSON.stringify(leaderboards[leaderboardKey]));
+            
+            // Update leaderboard display
+            updateClickLeaderboard(currentTimeSetting.toString());
+        }
+        
+        // Click test event listeners
+        clickStartBtn.addEventListener('click', startClickTest);
+        
+        clickArea.addEventListener('mousedown', function() {
+            if (!isClickTestRunning) return;
+            
+            clickCount++;
+            clickCounter.textContent = `🖱️ Clicks: ${clickCount}`;
+            
+            const elapsedTime = (Date.now() - clickStartTime) / 1000;
+            const cps = (clickCount / elapsedTime).toFixed(2);
+            clickCps.textContent = `📊 CPS: ${cps}`;
+            
+            // Add click effect
+            clickArea.classList.add('click-effect');
+            setTimeout(() => {
+                clickArea.classList.remove('click-effect');
+            }, 100);
+        });
+        
+        // Prevent text selection
+        clickArea.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Reaction test functions
+        function startReactionTest() {
+            if (isReactionTestRunning) return;
+            
+            isReactionTestRunning = true;
+            currentAttempt++;
+            reactionStartBtn.disabled = true;
+            reactionAreaText.textContent = "Wait for red...";
+            reactionArea.classList.remove('red-bg', 'green-bg');
+            reactionResult.textContent = "";
+            
+            // Random delay before red (1-3 seconds)
+            const redDelay = Math.floor(Math.random() * 2000) + 1000;
+            
+            setTimeout(() => {
+                reactionAreaText.textContent = "Wait for green...";
+                reactionArea.classList.add('red-bg');
+                isWaitingForGreen = true;
+                
+                // Random time to show green (1-3 seconds)
+                const greenDelay = Math.floor(Math.random() * 2000) + 1000;
+                
+                reactionTimeout = setTimeout(() => {
+                    if (!isReactionTestRunning) return;
+                    
+                    reactionAreaText.textContent = "CLICK NOW!";
+                    reactionArea.classList.remove('red-bg');
+                    reactionArea.classList.add('green-bg');
+                    reactionStartTime = Date.now();
+                    isWaitingForGreen = false;
+                }, greenDelay);
+            }, redDelay);
+        }
+        
+        function endReactionTest() {
+            if (!isReactionTestRunning || isWaitingForGreen) {
+                if (isWaitingForGreen) {
+                    reactionResult.textContent = "Too early! Wait for green.";
+                    reactionArea.classList.remove('red-bg', 'green-bg');
+                    reactionAreaText.textContent = "Click START to try again";
+                    isReactionTestRunning = false;
+                    reactionStartBtn.disabled = false;
+                    clearTimeout(reactionTimeout);
+                }
+                return;
+            }
+            
+            reactionEndTime = Date.now();
+            const reactionTime = reactionEndTime - reactionStartTime;
+            
+            // Update stats
+            reactionTimes.push(reactionTime);
+            if (bestReactionTime === 0 || reactionTime < bestReactionTime) {
+                bestReactionTime = reactionTime;
+            }
+            averageReactionTime = Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length);
+            
+            reactionTimeDisplay.textContent = `⏱️ Reaction: ${reactionTime}ms`;
+            reactionBestDisplay.textContent = `🏆 Best: ${bestReactionTime}ms`;
+            reactionAverageDisplay.textContent = `📊 Average: ${averageReactionTime}ms`;
+            
+            reactionResult.textContent = `Your reaction time: ${reactionTime}ms`;
+            reactionArea.classList.remove('green-bg');
+            reactionAreaText.textContent = currentAttempt < maxAttempts ? 
+                `Attempt ${currentAttempt} of ${maxAttempts}. Click START for next attempt` : 
+                "Test complete! Click START to try again";
+            
+            isReactionTestRunning = false;
+            reactionStartBtn.disabled = false;
+            
+            if (currentAttempt >= maxAttempts) {
+                saveReactionScore(bestReactionTime);
+                currentAttempt = 0;
+                reactionTimes = [];
+            }
+        }
+        
+        function saveReactionScore(time) {
+            const name = prompt('Test Complete! Enter your name:', 'Player');
+            if (name === null || name.trim() === '') return;
+            
+            const newScore = {
+                name: name.trim(),
+                time: time,
+                date: new Date().toLocaleDateString()
+            };
+            
+            // Add to reaction leaderboard
+            leaderboards.reaction.push(newScore);
+            
+            // Sort and keep top 10
+            leaderboards.reaction.sort((a, b) => a.time - b.time);
+            leaderboards.reaction = leaderboards.reaction.slice(0, 10);
+            
+            // Save to localStorage
+            localStorage.setItem('leaderboard-reaction', JSON.stringify(leaderboards.reaction));
+            
+            // Update leaderboard display
+            updateReactionLeaderboard();
+        }
+        
+        // Reaction test event listeners
+        reactionStartBtn.addEventListener('click', startReactionTest);
+        
+        reactionArea.addEventListener('click', function() {
+            if (!isReactionTestRunning) return;
+            
+            endReactionTest();
+        });
+        
+        // Prevent text selection
+        reactionArea.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+    </script>
+</body>
+</html>
+Leaderboard Reaction test coming soon.........
